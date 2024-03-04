@@ -3,18 +3,21 @@
 import pandas as pd
 import folium
 
-
 def load_affiliations():
-    """Load affiliations from scopus-papers.csvi"""
-    dataframe = pd.read_csv("https://raw.githubusercontent.com/jdvelasq/datalabs/master/datasets/scopus-papers.csv", sep=",", index_col=None)[['Affiliations']]
+    """Carga el archivo scopus-papers.csv y retorna un dataframe con la columna 'Affiliations'"""
+    dataframe = pd.read_csv(
+        "https://raw.githubusercontent.com/jdvelasq/datalabs/master/datasets/scopus-papers.csv",
+        sep=",",
+        index_col=None,
+    )[["Affiliations"]]
     return dataframe
-
 def remove_na_rows(affiliations):
     """Elimina las filas con valores nulos en la columna 'Affiliations'"""
+
     affiliations = affiliations.copy()
     affiliations = affiliations.dropna(subset=["Affiliations"])
-    return affiliations
 
+    return affiliations
 def add_countries_column(affiliations):
     """Transforma la columna 'Affiliations' a una lista de paises."""
 
@@ -31,7 +34,7 @@ def add_countries_column(affiliations):
     affiliations["countries"] = affiliations["countries"].str.join(", ")
 
     return affiliations
-  
+
 def clean_countries(affiliations):
 
     affiliations = affiliations.copy()
@@ -56,6 +59,7 @@ def plot_world_map(countries):
     countries = countries.to_frame()
     countries = countries.reset_index()
 
+
     m = folium.Map(location=[0, 0], zoom_start=2)
 
     folium.Choropleth(
@@ -65,8 +69,10 @@ def plot_world_map(countries):
         key_on="feature.properties.name",
         fill_color="Greens",
     ).add_to(m)
+
     m.save("map.html")
-  
+
+
 def main():
     """Función principal"""
     affiliations = load_affiliations()
@@ -77,6 +83,12 @@ def main():
     countries.to_csv("countries.csv")
     plot_world_map(countries)
 
+
 if __name__ == "__main__":
     main()
 
+
+# print(df.head())
+# for i in range(5):
+#     print('---')
+#     print(df.countries.values[i])
